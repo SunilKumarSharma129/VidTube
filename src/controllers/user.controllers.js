@@ -1,10 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
-import {
-  uploadOnCloudinary,
-  deleteFromCloudinary,
-} from "../utils/cloudinary.js";
+ 
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 import jwt from "jsonwebtoken";
@@ -12,24 +9,24 @@ import { use } from "react";
 import { json } from "express";
 import mongoose from "mongoose";
 
-const generateAccessAndRefereshToken = async (userId) => {
-  try {
-    const user = await User.findById(userId);
+// const generateAccessAndRefereshToken = async (userId) => {
+//   try {
+//     const user = await User.findById(userId);
 
-    //small check for user existence
+//     //small check for user existence
 
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
-    user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: false });
-    return { accessToken, refreshToken };
-  } catch (error) {
-    throw new ApiError(
-      500,
-      "Something went wrong while generating access and refresh tokens"
-    );
-  }
-};
+//     const accessToken = user.generateAccessToken();
+//     const refreshToken = user.generateRefreshToken();
+//     user.refreshToken = refreshToken;
+//     await user.save({ validateBeforeSave: false });
+//     return { accessToken, refreshToken };
+//   } catch (error) {
+//     throw new ApiError(
+//       500,
+//       "Something went wrong while generating access and refresh tokens"
+//     );
+//   }
+// };
 
 const registerUser = asyncHandler(async (req, res) => {
   const { fullname, email, username, password } = req.body;
@@ -117,10 +114,7 @@ const loginUser = asyncHandler(async (req, res) => {
   //get data from body
   const { email, username, password } = req.body;
 
-  //validation
-  if (!email) {
-    throw new ApiError(400, "Email is required");
-  }
+  
 
   const user = await User.findOne({
     $or: [{ username }, { email }],
@@ -229,20 +223,20 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-const changeCurrentPassword = asyncHandler(async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
-  const user = await User.findById(req.user?._id);
-  const isPasswordValid = await user.isPasswordCorrect(oldPassword);
+// const changeCurrentPassword = asyncHandler(async (req, res) => {
+//   const { oldPassword, newPassword } = req.body;
+//   const user = await User.findById(req.user?._id);
+//   const isPasswordValid = await user.isPasswordCorrect(oldPassword);
 
-  if (!isPasswordValid) {
-    throw new ApiError(401, "Old password is incorrect");
-  }
-  user.password = newPassword;
-  await user.save({ validateBeforeSave: false });
-  return res
-    .status(200)
-    .json(new ApiResponse(200, {}, "Password change successfully"));
-});
+//   if (!isPasswordValid) {
+//     throw new ApiError(401, "Old password is incorrect");
+//   }
+//   user.password = newPassword;
+//   await user.save({ validateBeforeSave: false });
+//   return res
+//     .status(200)
+//     .json(new ApiResponse(200, {}, "Password change successfully"));
+// });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
@@ -333,22 +327,22 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         username: username?.toLowerCase(),
       },
     },
-    {
-      $lookup: {
-        from: "subscriptions",
-        localField: "_id",
-        foreignField: "channel",
-        as: "susbcribers",
-      },
-    },
-    {
-      $lookup: {
-        from: "subscriptions",
-        localField: "_id",
-        foreignField: "subscriber",
-        as: "subscriberedTo",
-      },
-    },
+    // {
+    //   $lookup: {
+    //     from: "subscriptions",
+    //     localField: "_id",
+    //     foreignField: "channel",
+    //     as: "susbcribers",
+    //   },
+    // },
+    // {
+    //   $lookup: {
+    //     from: "subscriptions",
+    //     localField: "_id",
+    //     foreignField: "subscriber",
+    //     as: "subscriberedTo",
+    //   },
+    // },
     {
       $addFields: {
         subscribersCount: {
@@ -434,16 +428,16 @@ const getWatchHistory = asyncHandler(async (req, res) => {
       },
     },
   ]);
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        user[0]?.watchHistory,
-        "Watch history fetched successfully"
-      )
-    );
-});
+//   return res
+//     .status(200)
+//     .json(
+//       new ApiResponse(
+//         200,
+//         user[0]?.watchHistory,
+//         "Watch history fetched successfully"
+//       )
+//     );
+// });
 
 export {
   registerUser,
