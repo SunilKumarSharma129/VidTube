@@ -74,7 +74,7 @@ Nodejs, Expressjs, MongoDB, Mongoose, JWT, Bcrypt, cookie-parser
     cd backend
     ```
 
-- the use the following command to install the backend dependencies:
+- Use the following command to install the backend dependencies:
 
     ```bash
     npm install
