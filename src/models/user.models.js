@@ -50,17 +50,17 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.pre("save", async function (next) {
-  //fixed in registration videos
-  if (!this.isModified("password")) return next();
-  this.password = bcrypt.hash(this.password, 10);
+// userSchema.pre("save", async function (next) {
+//   //fixed in registration videos
+//   if (!this.isModified("password")) return next();
+//   this.password = bcrypt.hash(this.password, 10);
 
-  next();
-});
+//   next();
+// });
 
-userSchema.methods.isPasswordCorrect = async function (password) {
-  return await bcrypt.compare(password, this.password);
-};
+// userSchema.methods.isPasswordCorrect = async function (password) {
+//   return await bcrypt.compare(password, this.password);
+// };
 
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
